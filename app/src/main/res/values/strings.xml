@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">WeatherApp</string>
+    <string-array name="list">
+        <item>Android</item>
+        <item>iPhone</item>
+        <item>Windows</item>
+        <item>Blackberry</item>
+        <item>Linux</item>
+    </string-array>
+</resources>
