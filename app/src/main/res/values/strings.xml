@@ -1,10 +1,12 @@
 <resources>
     <string name="app_name">WeatherApp</string>
     <string-array name="list">
-        <item>Android</item>
-        <item>iPhone</item>
-        <item>Windows</item>
-        <item>Blackberry</item>
-        <item>Linux</item>
+        <item>SQL</item>
+        <item>JAVA</item>
+        <item>JAVA SCRIPT</item>
+        <item>C#</item>
+        <item>PYTHON</item>
+        <item>C++</item>
+        <item>PHP</item>
     </string-array>
 </resources>

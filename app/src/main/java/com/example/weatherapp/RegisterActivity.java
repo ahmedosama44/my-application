@@ -15,6 +15,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -23,70 +24,98 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+public class RegisterActivity extends AppCompatActivity implements View.OnClickListener{
+    EditText fullname;
     EditText username;
+    EditText email;
     EditText password;
-    Button login;
+    EditText confirmpassword;
     Button register;
+    Button login;
     ProgressDialog progress;
+    ArrayList<user> clients;
     FirebaseAuth firebaseauth;
     DatabaseReference firebasedatabase;
-    ArrayList<user> clients;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FirebaseApp.initializeApp(LoginActivity.this);
-        setContentView(R.layout.activity_login);
-        username = (EditText)findViewById(R.id.email_editText);
-        password = (EditText)findViewById(R.id.password_editText);
-        login = (Button)findViewById(R.id.login_button);
-        register = (Button)findViewById(R.id.register_button);
+        setContentView(R.layout.activity_register);
+        FirebaseApp.initializeApp(this);
+        fullname=(EditText)findViewById(R.id.fullname_editText);
+        username=(EditText)findViewById(R.id.username_editText);
+        email=(EditText)findViewById(R.id.email2_editText);
+        password=(EditText)findViewById(R.id.pass_editText);
+        confirmpassword=(EditText)findViewById(R.id.con_editText);
+        register=(Button)findViewById(R.id.registerbutton);
+        login=(Button)findViewById(R.id.loginbutton);
         progress = new ProgressDialog(this);
         clients = new ArrayList<user>();
         firebaseauth= FirebaseAuth.getInstance();
         firebasedatabase= FirebaseDatabase.getInstance().getReference("Users");
-        login.setOnClickListener(this);
         register.setOnClickListener(this);
+        login.setOnClickListener(this);
     }
-    public void LoginUser() {
-        final String Username = username.getText().toString();
-        String Password = password.getText().toString();
-        if(TextUtils.isEmpty(Username)) {
+    public void RegisterUser() {
+        String full = fullname.getText().toString();
+        String user = username.getText().toString();
+        String Email = email.getText().toString();
+        String pass = password.getText().toString();
+        String confirm = confirmpassword.getText().toString();
+        if(TextUtils.isEmpty(full)) {
+            Toast.makeText(this,"Enter Fullname",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(TextUtils.isEmpty(user)) {
             Toast.makeText(this,"Enter Username",Toast.LENGTH_SHORT).show();
             return;
         }
-        if(TextUtils.isEmpty(Password)) {
+        if(TextUtils.isEmpty(Email)) {
+            Toast.makeText(this,"Enter Email",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(TextUtils.isEmpty(pass)) {
             Toast.makeText(this,"Enter Password",Toast.LENGTH_SHORT).show();
             return;
         }
-        progress.setMessage("Signing In...");
-        progress.show();
-        String Email="";
+        if(TextUtils.isEmpty(confirm)) {
+            Toast.makeText(this,"Enter Password",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(!pass.equals(confirm)) {
+            Toast.makeText(this,"Enter Password Correctly",Toast.LENGTH_SHORT).show();
+            return;
+        }
         boolean flag=false;
         for(int i=0;i<clients.size();i++) {
             user current = clients.get(i);
-            if(Username.equals(current.getUsername())) {
-                Email=current.getEmail();
+            if(user.equals(current.getUsername())) {
                 flag=true;
+                break;
             }
         }
         if(!flag) {
-            Toast.makeText(LoginActivity.this,"Username is invalid ",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,"Username is already used",Toast.LENGTH_SHORT).show();
             return;
         }
-        firebaseauth.signInWithEmailAndPassword(Email,Password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+        progress.setMessage("Registering User...");
+        progress.show();
+        String Id = firebasedatabase.push().getKey().toString();
+        user current = new user(Id,user,Email);
+        firebasedatabase.child(Id).setValue(current);
+        firebaseauth.createUserWithEmailAndPassword(Email,pass).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()) {
                     progress.hide();
-                    Toast.makeText(LoginActivity.this,"Signed in successfully",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this,"Registered successfully",Toast.LENGTH_SHORT).show();
                     Intent listintent = new Intent(getApplicationContext(), ListActivity.class);
-                    listintent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     finish();
                     startActivity(listintent);
                 } else {
                     progress.hide();
-                    Toast.makeText(LoginActivity.this,task.getException().getMessage(),Toast.LENGTH_LONG).show();
+                    task.getException().getMessage().toString();
+                    Toast.makeText(RegisterActivity.this,"Could not Register successfully ",Toast.LENGTH_LONG).show();
+                    Toast.makeText(RegisterActivity.this,task.getException().getMessage(),Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -108,12 +137,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         });
     }
     public void onClick(View view) {
-        if(view==login) {
-            LoginUser();
-        }
         if(view==register) {
-            Intent registerintent = new Intent(getApplicationContext(), RegisterActivity.class);
-            startActivity(registerintent);
+            RegisterUser();
+        }
+        if(view==login) {
+            finish();
         }
     }
 }
