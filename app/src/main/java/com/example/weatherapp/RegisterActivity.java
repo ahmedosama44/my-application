@@ -85,16 +85,25 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             Toast.makeText(this,"Enter Password Correctly",Toast.LENGTH_SHORT).show();
             return;
         }
-        boolean flag=false;
+        boolean flag1=false;
+        boolean flag2=false;
         for(int i=0;i<clients.size();i++) {
             user current = clients.get(i);
             if(user.equals(current.getUsername())) {
-                flag=true;
+                flag1=true;
+                break;
+            }
+            if(Email.equals(current.getEmail())) {
+                flag2=true;
                 break;
             }
         }
-        if(!flag) {
+        if(flag1) {
             Toast.makeText(this,"Username is already used",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(flag2) {
+            Toast.makeText(this,"Email Address is already used",Toast.LENGTH_SHORT).show();
             return;
         }
         progress.setMessage("Registering User...");
