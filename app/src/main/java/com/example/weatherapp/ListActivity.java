@@ -54,7 +54,9 @@ public class ListActivity extends AppCompatActivity {
             view = getLayoutInflater().inflate(R.layout.listviewlayout,null);
             ImageView imageview =(ImageView)view.findViewById(R.id.imageView);
             TextView textview = (TextView)view.findViewById(R.id.textView);
+            TextView textview2 = (TextView)view.findViewById(R.id.textView2);
             imageview.setImageResource(Images[position]);
+            textview.setText(Names[position]);
             textview.setText(Names[position]);
             return view;
         }

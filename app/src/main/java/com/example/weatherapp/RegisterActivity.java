@@ -117,9 +117,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 if(task.isSuccessful()) {
                     progress.hide();
                     Toast.makeText(RegisterActivity.this,"Registered successfully",Toast.LENGTH_SHORT).show();
-                    Intent listintent = new Intent(getApplicationContext(), ListActivity.class);
                     finish();
-                    startActivity(listintent);
+
                 } else {
                     progress.hide();
                     task.getException().getMessage().toString();

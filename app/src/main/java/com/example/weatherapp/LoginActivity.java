@@ -1,4 +1,5 @@
 package com.example.weatherapp;
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -80,10 +81,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 if(task.isSuccessful()) {
                     progress.hide();
                     Toast.makeText(LoginActivity.this,"Signed in successfully",Toast.LENGTH_SHORT).show();
-                    Intent listintent = new Intent(getApplicationContext(), ListActivity.class);
-                    listintent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    Intent permissionintent = new Intent(getApplicationContext(), PermissionActivity.class);
+                    permissionintent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     finish();
-                    startActivity(listintent);
+                    startActivity(permissionintent);
                 } else {
                     progress.hide();
                     Toast.makeText(LoginActivity.this,task.getException().getMessage(),Toast.LENGTH_LONG).show();
