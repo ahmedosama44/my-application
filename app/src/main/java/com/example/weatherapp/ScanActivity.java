@@ -1,5 +1,4 @@
 package com.example.weatherapp;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -19,16 +18,14 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.List;
-
 public class ScanActivity extends AppCompatActivity {
     WifiManager manager;
     ListView listview;
     int size=0;
     List<ScanResult> result;
-    ArrayList<String> arrayList=new ArrayList<>();
+    ArrayList<ScanResult> arrayList=new ArrayList<>();
     CustomAdapter adapter;
     ArrayList<String> SSID=new ArrayList<>();
     ArrayList<String> BSSID=new ArrayList<>();
@@ -44,7 +41,10 @@ public class ScanActivity extends AppCompatActivity {
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent devicedetailintent = new Intent(getApplicationContext(), DeviceDetailActivity.class);
+                Intent devicedetailintent = new Intent(getApplicationContext(),DeviceDetailActivity.class);
+                ScanResult current = arrayList.get(position);
+                String data = current.SSID+"-"+current.BSSID;
+                devicedetailintent.putExtra("DATA",data);
                 startActivity(devicedetailintent);
             }
         });
@@ -62,7 +62,7 @@ public class ScanActivity extends AppCompatActivity {
             unregisterReceiver(this);
             for(ScanResult scanResult:result) {
                 if(scanResult.SSID.contains("MyESP8266AP")) {
-                    arrayList.add(scanResult.SSID);
+                    arrayList.add(scanResult);
                     SSID.add(scanResult.SSID);
                     BSSID.add("MAC Address: "+scanResult.BSSID);
                     adapter.notifyDataSetChanged();

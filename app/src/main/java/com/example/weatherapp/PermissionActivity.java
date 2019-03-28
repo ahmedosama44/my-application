@@ -13,7 +13,6 @@ import android.widget.Button;
 import android.widget.Toast;
 
 public class PermissionActivity extends AppCompatActivity implements View.OnClickListener{
-    Button internet;
     Button location;
     int locationpermission=1;
     @Override
